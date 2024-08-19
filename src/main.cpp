@@ -10,10 +10,12 @@ const int BUTTON_SINGLE_PIN = D6;
 const int BUTTON_BEER_PIN = D5;
 const int BUTTON_MULTI_PIN = 1;
 const int Button_B = D7;
+const int button_c_pin = D4;
 
 
 OneButton buttonA;
 OneButton buttonB;
+OneButton buttonC;
 OneButton start_button;
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64, &WIRE);
@@ -25,7 +27,8 @@ enum STATE {
   DrinkingSingle,
   DrinkingGroup,
   DrinkingStopSingle,
-  DrinkingStopGroup
+  DrinkingStopGroup,
+  PlayerCountSelect
 };
 
 STATE current_state = IDLE;
@@ -41,6 +44,9 @@ long last_display_update = 0;
 long countdown_start_time = 0;
 long person_A_end_time = 0;
 long person_B_end_time = 0;
+long person_C_end_time = 0;
+
+int player_count = 2;
 
 
 void display_time(long time) {
@@ -66,16 +72,38 @@ void display_timer() {
   }
 }
 
-
 void entering_group_contest() {
   Serial.println("start group click!");
-  current_state = PreparingGroup;
-  countdown_start_time = millis();
+  if (current_state == PlayerCountSelect) {
+    Serial.println("group 2 player");
+    player_count = 2;
+    countdown_start_time = millis();
+    current_state = PreparingGroup;
+  } else if (current_state == IDLE) {
+    display.display();
+    display.clearDisplay();
+    display.display();
+    display.setTextSize(2);
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(0,0);
+    display.println("CHUGOMETER");
+    display.setCursor(0,25);
+    display.println("player count");  
+    display.display();
+    current_state = PlayerCountSelect;
+  }
 }
 
 void entering_single_contest() {
   Serial.println("start single contest");
-  current_state = PreparingSingle;
+  if (current_state == PlayerCountSelect) {
+    Serial.println("group 3 player");
+    player_count = 3;
+    countdown_start_time = millis();
+    current_state = PreparingGroup;
+  } else if (current_state == IDLE) {
+    current_state = PreparingSingle;
+  }
 }
 
 void start_single_timer() { 
@@ -106,18 +134,34 @@ void display2_time(long timeA, long timeB) {
   display.setCursor(0,50);
   display.println(timeB);  
   display.display();
+}
 
+void display3_time(long time_a, long time_b, long time_c) {
+  display.display();
+  display.clearDisplay();
+  display.display();
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0,0);
+  display.println(time_a);
+  display.setCursor(0,25);
+  display.println(time_b);
+  display.setCursor(0,50);
+  display.println(time_c);  
+  display.display();
 }
 
 void drinking_group_loop() {
   long current_time = millis();
   if (current_time - last_display_update > 100){
-    if (person_A_end_time != 0) {
-      display2_time(person_A_end_time-start_time , current_time-start_time);
-    } else if (person_B_end_time != 0) {
-      display2_time(current_time-start_time, person_B_end_time-start_time);
-    } else {
-      display2_time(current_time-start_time, current_time-start_time);
+    if (player_count == 2){
+      if (person_A_end_time != 0) {
+        display2_time(person_A_end_time-start_time, current_time-start_time);
+      } else if (person_B_end_time != 0) {
+        display2_time(current_time-start_time, person_B_end_time-start_time);
+      } else {
+        display2_time(current_time-start_time, current_time-start_time);
+      }
     }
     last_display_update = current_time;
   }
@@ -127,11 +171,17 @@ void drinking_group_loop() {
 void stop_group_timer() {
   long chug_timeA = person_A_end_time - start_time;
   long chug_timeB = person_B_end_time - start_time;
-  display2_time(chug_timeA, chug_timeB);
+  long chug_timeC = person_C_end_time - start_time;
+  if (player_count == 2) {
+    display2_time(chug_timeA, chug_timeB);
+  } else if (player_count == 3) {
+    display3_time(chug_timeA, chug_timeB, chug_timeC);
+  }
 
   current_state = IDLE;
   person_A_end_time = 0;
   person_B_end_time = 0;
+  person_C_end_time = 0;
 }
 
 void pressButtonA() {
@@ -142,7 +192,7 @@ void pressButtonA() {
     break;
   case DrinkingGroup:
     person_A_end_time = millis();
-    if (person_B_end_time != 0) {
+    if ((person_B_end_time != 0 && person_C_end_time != 0 && player_count == 3) || (player_count == 2 && person_B_end_time != 0)) {
       current_state = DrinkingStopGroup;
     }
     break;
@@ -160,7 +210,24 @@ void pressButtonB() {
     break;
   case DrinkingGroup:
     person_B_end_time = millis();
-    if (person_A_end_time != 0) {
+    if ((person_A_end_time != 0 && person_C_end_time != 0 && player_count == 3) || (player_count == 2 && person_A_end_time != 0)) {
+      current_state = DrinkingStopGroup;
+    }
+    break;
+  default:
+    break;
+  }
+}
+
+void pressButtonC() {
+  Serial.println("press button C");
+  switch (current_state) {
+  case DrinkingSingle:
+    current_state = DrinkingStopSingle;
+    break;
+  case DrinkingGroup:
+    person_C_end_time = millis();
+    if (person_A_end_time != 0 && person_B_end_time != 0) {
       current_state = DrinkingStopGroup;
     }
     break;
@@ -173,13 +240,24 @@ void countdown() {
   long current_ct = (countdown_start_time + 5000) - millis();
   if (current_ct <= 0) {
     start_time = millis();
+    if (player_count == 3) {
+      display.display();
+      display.clearDisplay();
+      display.display();
+      display.setTextSize(2);
+      display.setTextColor(SSD1306_WHITE);
+      display.setCursor(0,0);
+      display.println("CHUGOMETER");
+      display.setCursor(0,25);
+      display.println("3 player");  
+      display.display();
+    }
     current_state = DrinkingGroup;
     Serial.println("DrinkingMultiStage");
   } else {
     display_time(current_ct);
   }
 }
-
 
 void setup() {
   Serial.begin(115200);
@@ -191,11 +269,13 @@ void setup() {
   // setup OneButton
   buttonA.setup(BUTTON_BEER_PIN, INPUT_PULLUP, true);
   buttonB.setup(Button_B, INPUT_PULLUP, true);
+  buttonC.setup(button_c_pin, INPUT_PULLUP, true);
   start_button.setup(BUTTON_SINGLE_PIN, INPUT_PULLUP, true);
 
   buttonA.attachPress(pressButtonA);
   buttonA.attachLongPressStop(start_single_timer);
   buttonB.attachPress(pressButtonB);
+  buttonC.attachPress(pressButtonC);
   
   start_button.attachClick(entering_single_contest);
   start_button.attachDoubleClick(entering_group_contest);
@@ -218,6 +298,7 @@ void loop() {
   start_button.tick();
   buttonA.tick();
   buttonB.tick();
+  buttonC.tick();
 
   switch (current_state) {
   case IDLE:
