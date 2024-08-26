@@ -2,6 +2,7 @@
 #include "OneButton.h"
 #include <Wire.h>
 #include <Adafruit_SSD1306.h>
+#include "display.h"
 
 #define WIRE Wire
 
@@ -15,8 +16,6 @@ const int Button_B = D7;
 OneButton buttonA;
 OneButton buttonB;
 OneButton start_button;
-
-Adafruit_SSD1306 display = Adafruit_SSD1306(128, 64, &WIRE);
 
 enum STATE {
   IDLE,
@@ -41,20 +40,6 @@ long last_display_update = 0;
 long countdown_start_time = 0;
 long person_A_end_time = 0;
 long person_B_end_time = 0;
-
-
-void display_time(long time) {
-  display.display();
-  display.clearDisplay();
-  display.display();
-  display.setTextSize(2);
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0,0);
-  display.println("CHUGOMETER");
-  display.setCursor(0,25);
-  display.println(time);  
-  display.display();
-}
 
 long start_time;
 
@@ -91,22 +76,6 @@ void stop_single_timer() {
   long chug_time = millis() - start_time;
   display_time(chug_time);
   current_state = IDLE;
-}
-
-void display2_time(long timeA, long timeB) {
-  display.display();
-  display.clearDisplay();
-  display.display();
-  display.setTextSize(2);
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0,0);
-  display.println("CHUGOMETER");
-  display.setCursor(0,25);
-  display.println(timeA);
-  display.setCursor(0,50);
-  display.println(timeB);  
-  display.display();
-
 }
 
 void drinking_group_loop() {
@@ -200,18 +169,7 @@ void setup() {
   start_button.attachClick(entering_single_contest);
   start_button.attachDoubleClick(entering_group_contest);
 
-
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  
-  display.display();
-  delay(500);
-  display.clearDisplay();
-  display.display();
-  display.setTextSize(2);
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0,0);
-  display.println("CHUGOMETER");
-  display.display();
-  
+  init_display();
 }
 
 void loop() {
