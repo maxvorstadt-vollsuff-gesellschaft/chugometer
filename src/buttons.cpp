@@ -115,8 +115,10 @@ void pad_lifted(int pad) {
   switch (current_state) {
     case SINGLE_WAITING:
       waiting_single_pad_lifted(pad);
+      break;
     case GROUP_COUNTDOWN:
       group_countdown_pad_lifted(pad);
+      break;
     default:
         break;
   }
