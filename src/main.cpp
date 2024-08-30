@@ -11,7 +11,17 @@
 #include "group_countdown.h"
 #include "group_drinking.h"
 #include "group_done.h"
+#include "setup.h"
 #include "buttons.h"
+
+void spasscreen() {
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  display.println("Ready your beer!");
+  display.display();
+}
 
 void setup() {
   Serial.begin(115200);
@@ -25,6 +35,9 @@ void loop() {
   poll_buttons();
 
   switch (current_state) {
+  case SETUP:
+    setup_loop();
+    break;
   case IDLE:
     idle_loop();
     break;

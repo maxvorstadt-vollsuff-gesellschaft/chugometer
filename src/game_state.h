@@ -12,6 +12,7 @@ struct GameState {
 };
 
 enum STATE {
+  SETUP,
   IDLE,
   PREPARE_SINGLE,
   SINGLE_WAITING,

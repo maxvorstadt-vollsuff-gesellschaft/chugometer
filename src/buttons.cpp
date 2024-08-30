@@ -8,6 +8,7 @@
 #include "group_drinking.h"
 #include "single_done.h"
 #include "group_done.h"
+#include "setup.h"
 
 
 OneButton menu_button;
@@ -61,6 +62,9 @@ void poll_buttons() {
 void menu_single_click() {
   Serial.println("m single click");
   switch (current_state) {
+    case SETUP:
+      setup_single_click();
+      break;
     case IDLE:
       idle_single_click();
       break;
