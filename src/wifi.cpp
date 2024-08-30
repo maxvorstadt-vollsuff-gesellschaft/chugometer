@@ -11,8 +11,8 @@ AsyncWebServer server(80);
 DNSServer dns;
 AsyncWiFiManager wifi_manager(&server,&dns);
 
-void setup_wifi() {
-    wifi_manager.autoConnect("Chugometer");
+bool setup_wifi() {
+    return wifi_manager.autoConnect("Chugometer");
 }
 
 bool wifi_connected() {
