@@ -13,6 +13,11 @@
 #include "group_done.h"
 #include "setup.h"
 #include "buttons.h"
+#ifdef ESP32
+#include <WiFi.h>
+#else
+#include <ESP8266WiFi.h>
+#endif
 
 void spasscreen() {
   display.clearDisplay();
@@ -26,7 +31,8 @@ void spasscreen() {
 void setup() {
   Serial.begin(115200);
   Serial.println("Starting...");
-
+  WiFi.begin();
+  
   init_buttons();
   init_display();
 }
