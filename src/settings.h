@@ -14,4 +14,10 @@
 #define TIMER_UPDATE_INTERVAL 50
 #define WIFI_TIMEOUT 10000
 
+#define NUM_LEDS 13
+
+#define DATA_PIN_1 D0
+#define DATA_PIN_2 D8
+#define DATA_PIN_3 D3
+
 #endif

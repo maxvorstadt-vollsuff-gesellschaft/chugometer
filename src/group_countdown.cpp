@@ -2,6 +2,7 @@
 #include "settings.h"
 #include "display.h"
 #include "game_state.h"
+#include "led.h"
 
 static long last_draw = 0;
 static long countdown_start = 0;
@@ -13,6 +14,7 @@ void group_countdown_loop() {
     }
     
     long remaining = COUNTDOWN_DURATION - (ts - countdown_start);
+    set_countdown_leds(remaining);
     if (ts - last_draw > TIMER_UPDATE_INTERVAL) {
         display.clearDisplay();
         display.setTextSize(2);

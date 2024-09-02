@@ -14,6 +14,7 @@
 #include "wifi_setup.h"
 #include "setup.h"
 #include "buttons.h"
+#include "led.h"
 #ifdef ESP32
 #include <WiFi.h>
 #else
@@ -32,15 +33,17 @@ void setup() {
 
   init_buttons();
   init_display();
-
+  
   //hier nur test
   remove_json_files();
   init_json_files();
+  setup_leds();
 }
 
 void loop() {
   
   poll_buttons();
+  led_loop();
 
   switch (current_state) {
   case SETUP:
