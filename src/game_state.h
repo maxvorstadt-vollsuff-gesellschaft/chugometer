@@ -8,9 +8,11 @@ struct GameState {
   long player_times[MAX_PLAYER];
   long start_time;
   bool disqualified[MAX_PLAYER];
+  long player_ids[MAX_PLAYER];
 };
 
 enum STATE {
+  SETUP,
   IDLE,
   PREPARE_SINGLE,
   SINGLE_WAITING,
@@ -19,7 +21,8 @@ enum STATE {
   PREPARE_GROUP,
   GROUP_COUNTDOWN,
   GROUP_DRINKING,
-  GROUP_DONE
+  GROUP_DONE,
+  WIFI_SETUP
 };
 
 extern GameState game_state;

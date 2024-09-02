@@ -12,5 +12,6 @@
 #define LONG_PRESS_DELAY 200
 
 #define TIMER_UPDATE_INTERVAL 50
+#define WIFI_TIMEOUT 10000
 
 #endif

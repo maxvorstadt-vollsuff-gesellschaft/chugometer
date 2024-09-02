@@ -11,12 +11,24 @@
 #include "group_countdown.h"
 #include "group_drinking.h"
 #include "group_done.h"
+#include "wifi_setup.h"
+#include "setup.h"
 #include "buttons.h"
+#ifdef ESP32
+#include <WiFi.h>
+#else
+#include <ESP8266WiFi.h>
+#endif
+
 #include "store_single_time.h"
 
 void setup() {
   Serial.begin(115200);
   Serial.println("Starting...");
+  Serial.println("Chip ID:");
+  Serial.println(ESP.getChipId());
+  WiFi.setHostname("chugometer");
+  WiFi.begin();
 
   init_buttons();
   init_display();
@@ -31,6 +43,9 @@ void loop() {
   poll_buttons();
 
   switch (current_state) {
+  case SETUP:
+    setup_loop();
+    break;
   case IDLE:
     idle_loop();
     break;
@@ -57,6 +72,9 @@ void loop() {
     break;
   case GROUP_DONE:
     group_done_loop();
+    break;
+  case WIFI_SETUP:
+    wifi_setup_loop();
     break;
   default:
     break;
