@@ -6,3 +6,4 @@ STATE current_state = IDLE;
 void reset_game_state() {
     game_state = {1, {0}, 0, {false}};
 }
+

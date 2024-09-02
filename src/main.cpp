@@ -12,6 +12,7 @@
 #include "group_drinking.h"
 #include "group_done.h"
 #include "buttons.h"
+#include "store_single_time.h"
 
 void setup() {
   Serial.begin(115200);
@@ -19,9 +20,14 @@ void setup() {
 
   init_buttons();
   init_display();
+
+  //hier nur test
+  remove_json_files();
+  init_json_files();
 }
 
 void loop() {
+  
   poll_buttons();
 
   switch (current_state) {
