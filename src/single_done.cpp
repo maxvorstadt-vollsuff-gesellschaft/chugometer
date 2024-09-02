@@ -1,5 +1,6 @@
 #include "display.h"
 #include "game_state.h"
+#include "store_single_time.h"
 
 static bool display_updated = false;
 
@@ -15,6 +16,12 @@ void single_done_loop() {
         display.display();
 
         display_updated = true;
+
+        //hier wird der Wert in die json Datei eingetragen
+        //da noch kein log-in vorgang oder persönliche id, hier alles mit 1 als id
+        add_value_to_json(1, game_state.player_times[0]);
+        //als test im termnal alle gespeicherten Werte anzeigen
+        read_json_file(0);
     }
 }
 void single_done_double_click() {

@@ -21,6 +21,7 @@
 #include <ESP8266WiFi.h>
 #endif
 
+#include "store_single_time.h"
 
 void setup() {
   Serial.begin(115200);
@@ -32,10 +33,15 @@ void setup() {
 
   init_buttons();
   init_display();
+  
+  //hier nur test
+  remove_json_files();
+  init_json_files();
   setup_leds();
 }
 
 void loop() {
+  
   poll_buttons();
   led_loop();
 
