@@ -15,6 +15,7 @@
 #include "setup.h"
 #include "buttons.h"
 #include "led.h"
+#include "time.h"
 #ifdef ESP32
 #include <WiFi.h>
 #else
@@ -38,6 +39,7 @@ void setup() {
   remove_json_files();
   init_json_files();
   setup_leds();
+  init_time();
 }
 
 void loop() {

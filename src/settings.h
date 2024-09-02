@@ -20,4 +20,6 @@
 #define DATA_PIN_2 D8
 #define DATA_PIN_3 D3
 
+#define RTC
+
 #endif
