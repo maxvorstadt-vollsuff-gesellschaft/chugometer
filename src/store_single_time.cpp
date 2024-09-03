@@ -164,3 +164,19 @@ boolean add_value_to_json(long id, int time) {
 
     return true;
 }
+
+String get_json_string(int pointer) {
+    String jsonString = "";
+    File file = LittleFS.open(file_paths[pointer], "r");
+    if (!file) {
+        Serial.println("Failed to open file for reading");
+        String message = "Failed reading";
+        return message;
+    }
+    
+    while (file.available()) {
+        jsonString += char(file.read());
+    }
+    file.close();
+    return jsonString;
+}
