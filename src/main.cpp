@@ -15,7 +15,7 @@
 #include "setup.h"
 #include "buttons.h"
 #include "led.h"
-#include "time.h"
+#include "custom_time.h"
 #ifdef ESP32
 #include <WiFi.h>
 #else
