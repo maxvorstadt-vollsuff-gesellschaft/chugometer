@@ -28,10 +28,9 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Starting...");
   Serial.println("Chip ID:");
-  Serial.println(ESP.getChipId());
-  WiFi.setHostname("chugometer");
   WiFi.begin();
-
+  WiFi.setHostname("chugometer");
+  
   init_buttons();
   init_display();
   

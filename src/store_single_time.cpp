@@ -10,9 +10,24 @@ void remove_json_file(int pointer) {
     const char* filePath = file_paths[pointer];
     Serial.println("In Remove function");
     if (!LittleFS.begin()) {
-        Serial.println("Failed to mount file system");
-        return;
+    Serial.println("Failed to mount LittleFS, formatting...");
+    
+    // Format the filesystem if mounting fails
+    if (LittleFS.format()) {
+      Serial.println("LittleFS formatted successfully.");
+    } else {
+      Serial.println("Failed to format LittleFS.");
     }
+    
+    // Attempt to mount again after formatting
+    if (!LittleFS.begin()) {
+      Serial.println("Failed to mount LittleFS after formatting.");
+    } else {
+      Serial.println("Mounted LittleFS successfully.");
+    }
+  } else {
+    Serial.println("LittleFS mounted successfully.");
+  }
     if (LittleFS.exists(filePath)) {
         if (LittleFS.remove(filePath)) {
             Serial.println("File deleted successfully.");
@@ -43,7 +58,7 @@ void init_json_file(int pointer) {
     // Check if the file exists
     if (!LittleFS.exists(filePath)) {
         // Create and open the file
-        File file = LittleFS.open(filePath, "w");
+        File file = LittleFS.open(filePath, "w+");
         if (!file) {
             Serial.println("Failed to create file");
             return;

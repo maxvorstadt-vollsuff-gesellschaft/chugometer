@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "display.h"
-#include "wifi.h"
+#include "wifi_driver.h"
 #include "game_state.h"
 
 void wifi_setup_loop() {
