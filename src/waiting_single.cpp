@@ -31,7 +31,7 @@ void waiting_single_loop() {
 
     #ifdef RFID
     String card_uid = read_uid();
-    if (card_uid == NULL) {
+    if (card_uid == "") {
         return;
     }
     game_state.card_ids[0] = card_uid;
