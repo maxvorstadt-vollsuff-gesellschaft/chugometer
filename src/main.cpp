@@ -11,6 +11,7 @@
 #include "group_countdown.h"
 #include "group_drinking.h"
 #include "group_done.h"
+#include "store_single_time.h"
 #include "wifi_setup.h"
 #include "setup.h"
 #include "buttons.h"
@@ -21,8 +22,10 @@
 #else
 #include <ESP8266WiFi.h>
 #endif
+#ifdef RFID
+#include "rfid.h"
+#endif
 
-#include "store_single_time.h"
 
 void setup() {
   Serial.begin(115200);
@@ -45,6 +48,10 @@ void loop() {
   
   poll_buttons();
   led_loop();
+
+  #ifdef RFID
+  init_reader();
+  #endif
 
   switch (current_state) {
   case SETUP:

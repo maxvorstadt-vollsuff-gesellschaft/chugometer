@@ -34,6 +34,10 @@
 #define DATA_PIN_2 GPIO_NUM_25
 #define DATA_PIN_3 GPIO_NUM_27
 #define DATA_PIN_4 GPIO_NUM_32
+#define RFID
+
+#define SS_PIN 5
+#define RST_PIN 22
 
 
 #endif
