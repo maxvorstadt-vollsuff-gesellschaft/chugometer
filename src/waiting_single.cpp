@@ -36,6 +36,7 @@ void waiting_single_loop() {
     }
     game_state.card_ids[0] = card_uid;
     updated_display = false;
+    halt_card();
     #endif
 }
 
