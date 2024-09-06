@@ -7,7 +7,8 @@
 #endif
 
 #ifdef RFID
-int logging_in = 0;  
+int logging_in = 0;
+String last_uid = "";
 #endif
 
 
@@ -33,6 +34,7 @@ void prepare_group_loop() {
     display.println("");
 
     if (all_ready) {
+        last_uid = "";
         current_state = GROUP_COUNTDOWN;
     }
 
@@ -42,16 +44,16 @@ void prepare_group_loop() {
         display.print("log in:");
         display.print(logging_in+1);
         String card_uid = read_uid();
-        if (card_uid == "") {
-            return;
+        if (card_uid != "" && card_uid != last_uid) {
+            game_state.card_ids[logging_in] = card_uid;
+            halt_card();
+            logging_in++;
+            Serial.print("logged player ");
+            Serial.print(logging_in);
+            Serial.print(" as ");
+            Serial.println(card_uid);
+            last_uid = card_uid;
         }
-        game_state.card_ids[logging_in] = card_uid;
-        halt_card();
-        logging_in++;
-        Serial.print("logged player ");
-        Serial.print(logging_in);
-        Serial.print(" as ");
-        Serial.println(card_uid);
     }
     #endif
 

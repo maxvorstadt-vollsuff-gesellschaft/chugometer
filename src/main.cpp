@@ -42,6 +42,8 @@ void setup() {
   init_json_files();
   setup_leds();
   init_time();
+
+  Serial.println("setup completed");
 }
 
 void loop() {

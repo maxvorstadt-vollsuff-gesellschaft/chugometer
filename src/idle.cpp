@@ -10,6 +10,7 @@ void draw();
 
 static bool updated_display = false;
 static bool settings = false;
+static String last_card_id = "";
 
 void idle_loop() {
     if (!updated_display) {
@@ -17,13 +18,14 @@ void idle_loop() {
         updated_display = true;
     }
     #ifdef RFID
-    //String card_uid = read_uid();
-    //if (card_uid == "") {
-    //    return;
-    //}
-    //halt_card();
-    //Serial.print("Read card: ");
-    //Serial.println(card_uid);
+    String card_uid = read_uid();
+    if (card_uid == "" || card_uid == last_card_id) {
+        return;
+    }
+    halt_card();
+    last_card_id = card_uid;
+    Serial.print("Read card:");
+    Serial.println(card_uid);
     #endif
 }
 

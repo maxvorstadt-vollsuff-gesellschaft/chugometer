@@ -15,6 +15,7 @@ String read_uid() {
     if (!rfid.PICC_IsNewCardPresent()) {
         return "";
     }
+
     if (!rfid.PICC_ReadCardSerial()) {
         return "";
     }
