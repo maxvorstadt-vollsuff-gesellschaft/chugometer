@@ -1,6 +1,8 @@
 #include "display.h"
 #include "game_state.h"
 #include "store_single_time.h"
+//HTTP TEST
+#include "database_request.h"
 
 static bool display_updated = false;
 
@@ -22,6 +24,10 @@ void single_done_loop() {
         add_value_to_json(1, game_state.player_times[0]);
         //als test im termnal alle gespeicherten Werte anzeigen
         read_json_file(0);
+
+        //test für HTTP POST
+        http_post(0);
+
     }
 }
 void single_done_double_click() {
