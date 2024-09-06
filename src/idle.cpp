@@ -1,7 +1,9 @@
 #include "game_state.h"
 #include "settings.h"
 #include "display.h"
-
+#ifdef RFID
+#include "rfid.h"  
+#endif
 
 void draw();
 
