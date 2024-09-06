@@ -43,8 +43,12 @@ void prepare_group_loop() {
             return;
         }
         game_state.card_ids[logging_in] = card_uid;
-        logging_in++;
         halt_card();
+        Serial.print("logged player ");
+        Serial.print(logging_in+1);
+        Serial.print(" as ");
+        Serial.println(card_uid);
+        logging_in++;
     }
     #endif
 
