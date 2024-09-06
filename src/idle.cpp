@@ -17,13 +17,13 @@ void idle_loop() {
         updated_display = true;
     }
     #ifdef RFID
-    String card_uid = read_uid();
-    if (card_uid == "") {
-        return;
-    }
-    halt_card();
-    Serial.print("Read card: ");
-    Serial.println(card_uid);
+    //String card_uid = read_uid();
+    //if (card_uid == "") {
+    //    return;
+    //}
+    //halt_card();
+    //Serial.print("Read card: ");
+    //Serial.println(card_uid);
     #endif
 }
 
@@ -39,14 +39,7 @@ void idle_single_click() {
 }
 
 void idle_double_click() {
-    if (settings) {
-        current_state = WIFI_SETUP;
-    } else if (game_state.player_count == 1) {
-        current_state = PREPARE_SINGLE;
-    } else {
-        current_state = PREPARE_GROUP;
-    }
-    updated_display = false;
+    
 }
 
 void draw() {
@@ -67,4 +60,15 @@ void draw() {
         display.println(game_state.player_count);  
         display.display();
     }
+}
+
+void idle_enter_click() {
+    if (settings) {
+        current_state = WIFI_SETUP;
+    } else if (game_state.player_count == 1) {
+        current_state = PREPARE_SINGLE;
+    } else {
+        current_state = PREPARE_GROUP;
+    }
+    updated_display = false;
 }

@@ -12,6 +12,7 @@
 
 
 OneButton menu_button;
+OneButton enter_button;
 
 OneButton pad_a;
 OneButton pad_b;
@@ -21,6 +22,8 @@ OneButton* pads[MAX_PLAYER] = {&pad_a, &pad_b, &pad_c};
 
 void menu_single_click();
 void menu_double_click();
+
+void enter_button_single_click();
 
 void pad_a_press();
 void pad_b_press();
@@ -34,6 +37,9 @@ void init_buttons() {
   menu_button.setup(MENU_BUTTON_PIN, INPUT_PULLUP, true);
   menu_button.attachClick(menu_single_click);
   menu_button.attachDoubleClick(menu_double_click);
+
+  enter_button.setup(MENU_BUTTON_ENTER, INPUT_PULLUP, true);
+  enter_button.attachClick(enter_button_single_click);
 
   // pads
   pad_a.setup(PAD_A_PIN, INPUT_PULLUP, true);
@@ -54,6 +60,7 @@ void init_buttons() {
 
 void poll_buttons() {
   menu_button.tick();
+  enter_button.tick();
   pad_a.tick();
   pad_b.tick();
   pad_c.tick();
@@ -93,6 +100,17 @@ void menu_double_click() {
       break;
     default:
         break;
+  }
+}
+
+void enter_button_single_click() {
+  Serial.println("enter single click");
+  switch(current_state) {
+    case IDLE:
+      idle_enter_click();
+      break;
+    default:
+      break;
   }
 }
 
