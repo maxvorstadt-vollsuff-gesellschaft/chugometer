@@ -2,6 +2,9 @@
 #include "settings.h"
 #include "game_state.h"
 #include "buttons.h"
+#ifdef RFID
+#include "rfid.h"  
+#endif
 
 #ifdef RFID
 int logging_in = 0;  
@@ -44,11 +47,11 @@ void prepare_group_loop() {
         }
         game_state.card_ids[logging_in] = card_uid;
         halt_card();
+        logging_in++;
         Serial.print("logged player ");
-        Serial.print(logging_in+1);
+        Serial.print(logging_in);
         Serial.print(" as ");
         Serial.println(card_uid);
-        logging_in++;
     }
     #endif
 
