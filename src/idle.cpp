@@ -14,6 +14,15 @@ void idle_loop() {
         draw();
         updated_display = true;
     }
+    #ifdef RFID
+    String card_uid = read_uid();
+    if (card_uid == "") {
+        return;
+    }
+    halt_card();
+    Serial.print("Read card: ");
+    Serial.println(card_uid);
+    #endif
 }
 
 void idle_single_click() {
