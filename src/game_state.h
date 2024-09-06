@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "settings.h"
 
 #ifndef GAME_STATE_H
@@ -9,6 +10,7 @@ struct GameState {
   long start_time;
   bool disqualified[MAX_PLAYER];
   long player_ids[MAX_PLAYER];
+  String card_ids[MAX_PLAYER];
 };
 
 enum STATE {

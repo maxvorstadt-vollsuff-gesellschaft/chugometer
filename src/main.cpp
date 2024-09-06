@@ -11,26 +11,29 @@
 #include "group_countdown.h"
 #include "group_drinking.h"
 #include "group_done.h"
+#include "store_single_time.h"
 #include "wifi_setup.h"
 #include "setup.h"
 #include "buttons.h"
 #include "led.h"
+#include "custom_time.h"
 #ifdef ESP32
 #include <WiFi.h>
 #else
 #include <ESP8266WiFi.h>
 #endif
+#ifdef RFID
+#include "rfid.h"
+#endif
 
-#include "store_single_time.h"
 
 void setup() {
   Serial.begin(115200);
   Serial.println("Starting...");
   Serial.println("Chip ID:");
-  Serial.println(ESP.getChipId());
-  WiFi.setHostname("chugometer");
   WiFi.begin();
-
+  WiFi.setHostname("chugometer");
+  
   init_buttons();
   init_display();
   
@@ -38,6 +41,13 @@ void setup() {
   remove_json_files();
   init_json_files();
   setup_leds();
+  init_time();
+
+  Serial.println("setup completed");
+
+  #ifdef RFID
+  init_reader();
+  #endif
 }
 
 void loop() {

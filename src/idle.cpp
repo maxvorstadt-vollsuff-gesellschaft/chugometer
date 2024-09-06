@@ -1,19 +1,32 @@
 #include "game_state.h"
 #include "settings.h"
 #include "display.h"
-
+#ifdef RFID
+#include "rfid.h"  
+#endif
 
 void draw();
 
 
 static bool updated_display = false;
 static bool settings = false;
+static String last_card_id = "";
 
 void idle_loop() {
     if (!updated_display) {
         draw();
         updated_display = true;
     }
+    #ifdef RFID
+    String card_uid = read_uid();
+    if (card_uid == "" || card_uid == last_card_id) {
+        return;
+    }
+    halt_card();
+    last_card_id = card_uid;
+    Serial.print("Read card:");
+    Serial.println(card_uid);
+    #endif
 }
 
 void idle_single_click() {
@@ -28,14 +41,7 @@ void idle_single_click() {
 }
 
 void idle_double_click() {
-    if (settings) {
-        current_state = WIFI_SETUP;
-    } else if (game_state.player_count == 1) {
-        current_state = PREPARE_SINGLE;
-    } else {
-        current_state = PREPARE_GROUP;
-    }
-    updated_display = false;
+    
 }
 
 void draw() {
@@ -56,4 +62,15 @@ void draw() {
         display.println(game_state.player_count);  
         display.display();
     }
+}
+
+void idle_enter_click() {
+    if (settings) {
+        current_state = WIFI_SETUP;
+    } else if (game_state.player_count == 1) {
+        current_state = PREPARE_SINGLE;
+    } else {
+        current_state = PREPARE_GROUP;
+    }
+    updated_display = false;
 }
