@@ -44,16 +44,16 @@ void setup() {
   init_time();
 
   Serial.println("setup completed");
+
+  #ifdef RFID
+  init_reader();
+  #endif
 }
 
 void loop() {
   
   poll_buttons();
   led_loop();
-
-  #ifdef RFID
-  init_reader();
-  #endif
 
   switch (current_state) {
   case SETUP:
