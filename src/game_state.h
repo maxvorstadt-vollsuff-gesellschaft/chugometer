@@ -24,7 +24,8 @@ enum STATE {
   GROUP_COUNTDOWN,
   GROUP_DRINKING,
   GROUP_DONE,
-  WIFI_SETUP
+  WIFI_SETUP,
+  SETTINGS_MENU,
 };
 
 extern GameState game_state;

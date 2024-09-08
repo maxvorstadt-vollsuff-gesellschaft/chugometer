@@ -9,7 +9,7 @@
 #include "single_done.h"
 #include "group_done.h"
 #include "setup.h"
-
+#include "settings_menu.h"
 
 OneButton menu_button;
 OneButton enter_button;
@@ -81,6 +81,9 @@ void menu_single_click() {
     case GROUP_DONE:
       group_done_click();
       break;
+    case SETTINGS_MENU:
+      settings_menue_cycle();
+      break;
     default:
         break;
   }
@@ -108,6 +111,9 @@ void enter_button_single_click() {
   switch(current_state) {
     case IDLE:
       idle_enter_click();
+      break;
+    case SETTINGS_MENU:
+      settings_menu_enter();
       break;
     default:
       break;

@@ -50,7 +50,7 @@ void draw() {
         display.setTextSize(2);
         display.setTextColor(SSD1306_WHITE);
         display.setCursor(0,0);
-        display.println("Setup Wifi");
+        display.println("Settings");
         display.display();
     } else {
         display.clearDisplay();
@@ -66,7 +66,7 @@ void draw() {
 
 void idle_enter_click() {
     if (settings) {
-        current_state = WIFI_SETUP;
+        current_state = SETTINGS_MENU;
     } else if (game_state.player_count == 1) {
         current_state = PREPARE_SINGLE;
     } else {

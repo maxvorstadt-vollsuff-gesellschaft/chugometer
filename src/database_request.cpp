@@ -1,23 +1,19 @@
-#include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
 #include <store_single_time.h>
 #include <WiFiClientSecure.h>
-
-
-
+#include <WiFi.h>
+#include <HTTPClient.h>
 
 void http_post(int pointer) {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient https;
-    WiFiClientSecure wifiClient;
-    wifiClient.setInsecure();
-
+    WiFiClientSecure *wifiClient = new WiFiClientSecure;
+    wifiClient->setInsecure();
 
     const char* url = "https://api.aperol.life/chugs";
 
     // Specify the URL
-    https.begin(wifiClient, url);
+    https.begin(*wifiClient, url);
 
     // Specify content-type header
     https.addHeader("content-type", "application/json");
@@ -39,6 +35,7 @@ void http_post(int pointer) {
 
     // End the connection
     https.end();
+    delete wifiClient;
   } else {
     Serial.println("Error in WiFi connection");
   }

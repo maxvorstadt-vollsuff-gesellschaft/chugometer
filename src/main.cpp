@@ -16,6 +16,7 @@
 #include "setup.h"
 #include "buttons.h"
 #include "led.h"
+#include "settings_menu.h"
 #include "custom_time.h"
 #ifdef ESP32
 #include <WiFi.h>
@@ -38,7 +39,7 @@ void setup() {
   init_display();
   
   //hier nur test
-  remove_json_files();
+  init_fs();
   init_json_files();
   setup_leds();
   init_time();
@@ -88,6 +89,9 @@ void loop() {
     break;
   case WIFI_SETUP:
     wifi_setup_loop();
+    break;
+  case SETTINGS_MENU:
+    settings_menu_loop();
     break;
   default:
     break;

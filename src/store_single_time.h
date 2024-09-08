@@ -5,6 +5,8 @@
 extern const char* file_paths[5];
 extern int file_pointer;
 
+void init_fs();
+
 void init_json_file(int pointer);
 
 void init_json_files();
