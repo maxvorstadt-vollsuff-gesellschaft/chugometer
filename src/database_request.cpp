@@ -4,7 +4,7 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-void http_post(int pointer) {
+bool http_post(int pointer) {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient https;
     WiFiClientSecure *wifiClient = new WiFiClientSecure;
@@ -26,28 +26,38 @@ void http_post(int pointer) {
     // Check the response code
     if (httpResponseCode > 0) {
       String response = https.getString();
-      Serial.println(httpResponseCode); // HTTP response code
-      Serial.println(response);         // Response from server
+      Serial.println(httpResponseCode);
+      Serial.println(response);
+      if (httpResponseCode == 200) {
+        https.end();
+        delete wifiClient;
+        return true;
+      }
     } else {
       Serial.print("Error on sending POST: ");
       Serial.println(httpResponseCode);
+      return false;
     }
-
-    // End the connection
-    https.end();
-    delete wifiClient;
   } else {
     Serial.println("Error in WiFi connection");
+    return false;
   }
-
-  // Wait for some time before sending the next request
-  delay(10000);
+  return false;
 }
 
 void send_all_files() {
     for (int i = 0; i <= file_pointer; i++)
     {
-        http_post(i);
+      if (http_post(i)) {
+        Serial.print("success syncing file ");
+        Serial.println(i);
+        remove_json_file(i);
+        init_json_file(i);
+      } else {
+        Serial.print("failed syncing file ");
+        Serial.println(i);
+      }
+      delay(500);
     }
     
 }

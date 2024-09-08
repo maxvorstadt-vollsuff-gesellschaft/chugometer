@@ -32,5 +32,5 @@ void wifi_setup_loop() {
 
     delay(1000);
 
-    current_state = IDLE;
+    current_state = SETTINGS_MENU;
 }

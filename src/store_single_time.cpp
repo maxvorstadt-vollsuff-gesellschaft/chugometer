@@ -2,6 +2,8 @@
 #include <ArduinoJson.h>  // ArduinoJson library
 #include <LittleFS.h> 
 
+#define FILE_SIZE 4096
+
 const char* file_paths[5] = {"/time_file_1.json", "/time_file_2.json", "/time_file_3.json", "/time_file_4.json", "/time_file_5.json"};
 int file_pointer = 0;
 
@@ -64,7 +66,7 @@ void init_json_file(int pointer) {
         }
 
         // Create a JSON document and initialize it with an empty object
-        StaticJsonDocument<2048> doc;
+        StaticJsonDocument<FILE_SIZE> doc;
         doc.to<JsonObject>();  // Initialize as an empty object '{}'
 
         // Serialize the empty object to the file
@@ -108,7 +110,7 @@ void read_json_file(int pointer) {
         return;
     }
 
-    StaticJsonDocument<2048> doc;
+    StaticJsonDocument<FILE_SIZE> doc;
 
     // Deserialize the JSON document
     DeserializationError error = deserializeJson(doc, file);
@@ -121,16 +123,17 @@ void read_json_file(int pointer) {
     serializeJsonPretty(doc, Serial);
 }
 
-boolean add_value_to_json(long id, int time) {
+boolean add_value_to_json(String id, int time) {
 
     if (file_pointer > 4)
     {
+        Serial.println("Not enough space in file system");
         return false;
     }
 
     const char* filePath = file_paths[file_pointer];
     File file = LittleFS.open(filePath, "r");
-    StaticJsonDocument<2048> doc;
+    StaticJsonDocument<FILE_SIZE> doc;
 
     if (file) {
         // Deserialize the JSON document from the file

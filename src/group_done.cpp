@@ -1,11 +1,21 @@
 #include "settings.h"
 #include "game_state.h"
 #include "display.h"
+#include "store_single_time.h"
 
 static long last_rotate = 0;
 static int position = 0;
+static int saved = false;
 
 void group_done_loop() {
+    if (!saved) {
+        for (int i = 0; i < game_state.player_count; i++) {
+            if (game_state.card_ids[i] != "") {
+                add_value_to_json(game_state.card_ids[i], game_state.player_times[i]);
+            }
+        }
+        saved = true;
+    }
     if (millis() - last_rotate > 2000) {
         display.clearDisplay();
         display.setTextSize(2);
@@ -32,10 +42,12 @@ void group_done_loop() {
 
 void group_done_click() {
     current_state = IDLE;
+    saved = false;
     reset_game_state();
 }
 
 void group_done_double_click() {
     current_state = IDLE;
+    saved = false;
     reset_game_state();
 }

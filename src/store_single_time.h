@@ -17,6 +17,6 @@ void remove_json_file(int pointer);
 
 void remove_json_files();
 
-boolean add_value_to_json(long id, int time);
+boolean add_value_to_json(String id, int time);
 
 String get_json_string(int pointer);

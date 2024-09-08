@@ -4,17 +4,16 @@
 #include <WiFi.h>
 #endif
 
-#include <ESPAsyncWebServer.h>
-#include <ESPAsyncWiFiManager.h>
+#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 
-AsyncWebServer server(80);
-DNSServer dns;
-AsyncWiFiManager wifi_manager(&server,&dns);
+WiFiManager wifi_manager;
 
 bool setup_wifi() {
-    return wifi_manager.autoConnect("Chugometer");
-}
-
-bool wifi_connected() {
-    return false;
+    // AutoConnect will try to connect to the last known WiFi network or start the configuration portal
+    if (!wifi_manager.autoConnect("Chugometer")) {
+        // If connection fails, return false
+        return false;
+    }
+    // If connected, return true
+    return true;
 }

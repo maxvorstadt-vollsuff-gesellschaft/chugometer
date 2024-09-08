@@ -18,16 +18,8 @@ void single_done_loop() {
         display.display();
 
         display_updated = true;
-
-        //hier wird der Wert in die json Datei eingetragen
-        //da noch kein log-in vorgang oder persönliche id, hier alles mit 1 als id
-        add_value_to_json(1, game_state.player_times[0]);
-        //als test im termnal alle gespeicherten Werte anzeigen
+        add_value_to_json(game_state.card_ids[0], game_state.player_times[0]);
         read_json_file(0);
-
-        //test für HTTP POST
-        http_post(0);
-
     }
 }
 void single_done_double_click() {

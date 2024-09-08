@@ -2,6 +2,8 @@
 #include "display.h"
 #include "store_single_time.h"
 #include "game_state.h"
+#include "wifi_driver.h"
+#include "database_request.h"
 
 static int current_menu = 0;
 
@@ -20,6 +22,12 @@ void settings_menu_loop() {
             display.println("sync");
             break;
         case 3:
+            display.println("write test data");
+            break;
+        case 4:
+            display.println("wifi");
+            break;
+        case 5:
             display.println("back");
             break;
         default:
@@ -30,7 +38,7 @@ void settings_menu_loop() {
 
 void settings_menue_cycle() {
     current_menu++;
-    if (current_menu > 3) {
+    if (current_menu > 5) {
         current_menu = 0;
     }
 }
@@ -38,6 +46,12 @@ void settings_menue_cycle() {
 void read_json_files() {
     for (int i = 0; i < 5; i++) {
         read_json_file(i);
+    }
+}
+
+void write_test_data() {
+    for (int i = 0; i < 5; i++) {
+        add_value_to_json("TEST", 123*i);
     }
 }
 
@@ -51,9 +65,16 @@ void settings_menu_enter() {
             read_json_files();
             break;
         case 2:
-
+            setup_wifi();
+            send_all_files();
             break;
         case 3:
+            write_test_data();
+            break;
+        case 4:
+            current_state = WIFI_SETUP;
+            break;
+        case 5:
             current_state = IDLE;
             break;
     }

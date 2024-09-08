@@ -30,7 +30,7 @@ String read_uid() {
         }
         uidString += String(rfid.uid.uidByte[i], HEX);
     }
-
+    uidString.trim();
     return uidString;
 }
 
