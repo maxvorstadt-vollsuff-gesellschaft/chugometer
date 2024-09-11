@@ -1,19 +1,33 @@
 #if defined(ESP8266)
-#include <ESP8266WiFi.h>          //https://github.com/esp8266/Arduino
+#include <ESP8266WiFi.h>
 #else
 #include <WiFi.h>
 #endif
 
-#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
+#include <WiFiManager.h>
+#include "custom_time.h"
+#include "settings.h"
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 
 WiFiManager wifi_manager;
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
 bool setup_wifi() {
-    // AutoConnect will try to connect to the last known WiFi network or start the configuration portal
     if (!wifi_manager.autoConnect("Chugometer")) {
-        // If connection fails, return false
         return false;
     }
-    // If connected, return true
+    
+    #ifdef RTC
+    if (!is_rtc_set()) {
+        timeClient.begin();
+        timeClient.update();
+    
+        uint32_t epochTime = timeClient.getEpochTime();
+        Serial.println("Setting RTC time from NTP");
+        set_time(epochTime);
+    }
+    #endif
     return true;
 }

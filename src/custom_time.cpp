@@ -24,3 +24,17 @@ uint32_t get_ts() {
     return 0;
     #endif
 }
+
+bool is_rtc_set() {
+    #ifdef RTC
+    return rtc.lostPower();
+    #else
+    return false;
+    #endif
+}
+
+void set_time(uint32_t ts) {
+    #ifdef RTC
+    rtc.adjust(DateTime(ts));
+    #endif
+}
